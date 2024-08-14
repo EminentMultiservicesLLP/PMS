@@ -1,0 +1,145 @@
+﻿
+<!DOCTYPE html>
+@model BISQUIZ_UI.Models.LoginModel
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Eminent Multiservices-Login</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+        body {
+            font-size: .85em;
+            font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+            color: #232323;
+            background-image: url('../../Images/back-min.jpg');
+        }
+
+        .login {
+            position: relative;
+            top: 10%;
+            display: inline-block;
+            left: 5%;
+            width: 100%;
+            height: auto;
+            max-width: 550px;
+            background: transparent;
+            border-radius: 6px #000 solid;
+        }
+
+        #loginbox {
+            max-width: 350px;
+        }
+
+        #signupbox {
+            max-width: 450px;
+        }
+    </style>
+
+    @Styles.Render("~/Content/cssMust")
+</head>
+<body>
+    <div class="row">
+        <section class="content-wrapper">
+            <div id="ShowView" style="margin-top: 10px;">
+                <div id="loginbox" style="margin-top: 50px;" class="mainbox col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
+                    <div class="panel panel-info" style="background-color: transparent;border-width:3px;border-color:ActiveCaption;width:300px">
+                        @using (Html.BeginForm())
+            {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true);
+                            <div>
+
+
+                                <div class="panel-heading">
+                                    <div class="panel-title"><img src="~/Images/logo.jpg" /></div>
+                                </div>
+                                <div style="padding-top: 30px" class="panel-body">
+                                    @using (Ajax.BeginForm("Login", "Account", new AjaxOptions() { UpdateTargetId = "loginAlert" }))
+                                    {
+                                        <div style="margin-bottom: 15px" class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                            <b> @Html.TextBoxFor(m => m.Username, new { placeholder = "username or email", @class = "form-control" })</b>
+                                        </div>
+
+                                        <div style="margin-bottom: 15px" class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                            @Html.PasswordFor(m => m.Password, new { placeholder = "password", @class = "form-control" })
+                                        </div>
+
+                                        <div style="margin-bottom: 15px" class="input-group">
+                                            @Html.CheckBoxFor(m => m.RememberMe) Remember Me
+                                        </div>
+
+                                        <div style="margin-bottom: 15px" class="input-group">
+                                            <!-- Button -->
+                                            <div class="controls">
+                                                <input type="submit" value="Login" class="btn btn-success">
+                                            </div>
+                                        </div>
+
+                                        <p style="color :red">
+                                            @ViewBag.LoginFailedMsg
+                                        </p>
+
+
+                                        <div class="form-group">
+                                            <div class="control">
+                                            </div>
+                                        </div>
+                                    }
+                                    <div id="loginAlert"></div>
+                                </div>
+
+
+
+
+
+                            </div>
+                        }
+                        @*<div style="margin-bottom: 15px;margin-left:10px" class="input-group">
+                            <div class="controls">
+                                <button type="submit" onclick="ForgotPass();" class="btn btn-primary btn-sm">
+                                    Forgot Password?
+                                </button>
+
+                            </div>
+                            </div>*@
+                        </div>
+
+                </div>
+
+            </div>
+           
+        </section>
+    </div>
+</body>
+</html>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(".input").focusin(function () {
+        $(this).find("span").animate({ "opacity": "0" }, 200);
+    });
+
+    $(".input").focusout(function () {
+        $(this).find("span").animate({ "opacity": "1" }, 300);
+    });
+
+    function ForgotPass() {
+        debugger;
+            var Username = $("#Username").val()
+            if ($("#Username").val() != "")
+        {
+                window.location.href = '/ForgotPassword/ForgotPassword'+'?Username='+ Username
+        }
+    }
+
+</script>
+
+        
+

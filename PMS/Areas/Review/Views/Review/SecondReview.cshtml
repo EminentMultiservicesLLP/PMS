@@ -1,0 +1,277 @@
+﻿@using System.Web.Mvc.Html
+
+@using (Html.BeginForm())
+{
+    <style>
+        .div_lbl_grid2 {
+            border: groove;
+            text-align: center;
+        }
+
+          div#divPartialLoading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('/Images/ImageLoading.gif') 50% 50% no-repeat rgb(249,249,249);
+        opacity: .6;
+    }
+    </style>
+
+    <fieldset>
+        <div class="panel-collapse collapse in panel-groupingBoder" aria-expanded="true">
+            <div class="panel-title">
+                <div class="panel-heading">
+                    <a class="collapsediv" data-toggle="collapse" href="#RvwdEmp" style="color: white">
+                        Reviewe Employee Search
+                    </a>
+                </div>
+            </div>
+            <div id="RvwdEmp" class="panel-collapse collapse in" aria-expanded="true">
+                <div id="divPartialLoading" style='display:none;'></div>
+                <div class="panel-body">
+                    <div class="container fill">
+                        <div id="SecRvwSearchGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="SecRevGridDiv" style="display:none">
+            <div class="panel-group ">
+                <div class="panel">
+                    <div class="panel-groupingBoder">
+                        <div class="panel-heading panel-groupingBoder">
+                            <div class="panel-title">
+                                <a class="collapsediv" data-toggle="collapse" href="#SecRvwDtls" style="color: white">
+                                    Reviewed Employee
+                                </a>
+                            </div>
+                        </div>
+                        <div id="SecRvwDtls" class="panel-collapse collapse in" aria-expanded="true">
+                            <div class="panel-body">
+
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("Name of Appraisee")</b>
+                                        @Html.TextBox("SecFirstName", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("Appraisee's Salary")</b>
+                                        @Html.TextBox("SecSalary", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b> @Html.Label("Appraisee's Designation")</b>
+                                        @Html.TextBox("SecDesignationName", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-3">
+                                        <b> @Html.Label("D.O.Joining")</b>
+                                        @Html.TextBox("SecJoiningDate", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("D.O.Confirmation")</b>
+                                        @Html.TextBox("SecConfirmationDate", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("D.O.last prom/Incr")</b>
+                                        @Html.TextBox("SecLastPromoDate", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-horizontal">
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("    Name of Appraiser")</b>
+                                        @Html.TextBox("SecAppraiserName", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>@Html.Label("Appraiser's Designation")</b>
+                                        @Html.TextBox("SecAppraiserDesigName", null, new { @class = "form-control", disabled = "true" })
+                                    </div>
+
+                                </div>
+
+                                <div class="container fill">
+                                    <div class="row">
+                                        <div class="col-sm-2 div_lbl_grid2">
+                                            <b>@Html.Label("1-Poor")</b>
+                                        </div>
+                                        <div class="col-sm-3 div_lbl_grid2">
+                                            <b>@Html.Label("2-Below Expectation")</b>
+                                        </div>
+                                        <div class="col-sm-3 div_lbl_grid2">
+                                            <b>@Html.Label("3-Meet Expectation")</b>
+                                        </div>
+                                        <div class="col-sm-2 div_lbl_grid2">
+                                            <b>@Html.Label("4-Above Expectation")</b>
+                                        </div>
+                                        <div class="col-sm-2 div_lbl_grid2">
+                                            <b>@Html.Label("5-Outstanding")</b>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-1">
+                                            @Html.Label("Grade ", new { @class = "", style = "font-weight: bold" })
+                                        </div>
+                                        <div class="col-sm-2">
+                                            @Html.TextBox("Grade", null, new { @class = "form-control", style = "font-weight: bold;background-color:#B8E5B5;", disabled = "true" })
+                                        </div>
+                                        <div class="col-sm-1">
+                                            @Html.Label("Remark ", new { @class = "required", style = "font-weight: bold" })
+                                        </div>
+                                        <div class="col-sm-8">
+                                            @Html.TextBox("GrdRemark", null, new { @class = "form-control", style = "font-weight: bold" })
+                                        </div>
+                                    </div>                                                                     
+                                    <div id="SecReviewGrid"></div>
+                                    @Html.Hidden("EmpFinalReviewId")
+                                    @Html.Hidden("SecEmpReviewId")
+                                    @Html.Hidden("GradeId")
+                                </div>
+                                <br />
+
+
+
+                                <div class="container fill">
+
+                                    <div class="panel-collapse collapse in panel-groupingBoder" aria-expanded="true">
+                                        <div class="panel-title">
+                                            <div class="panel-heading">
+                                                <a class="collapsediv" data-toggle="collapse" href="#Conclusion" style="color: white">
+                                                    Conclusion
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="ConclusionSecDiv" id="Conclusion">
+                                            <div class="row form-group">
+
+                                                <div class="col-sm-2" style="padding-left:17px">
+                                                    @Html.Label("Final Outcome (Expectations)", new { @class = "required", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Below", new { @class = "", style = "font-weight: bold" })
+                                                    @Html.RadioButton("FinalOutcome", "1")
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Meets", new { @class = "", style = "font-weight: bold" })
+                                                    @Html.RadioButton("FinalOutcome", "2")
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Exceeds", new { @class = "", style = "font-weight: bold" })
+                                                    @Html.RadioButton("FinalOutcome", "3")
+                                                </div>                                         
+                                                <div class="col-sm-3">
+                                                    @Html.Label("Outcome Manager View", new { @class = "required", style = "font-weight: bold" })
+                                                    @Html.TextBox("OutComeManView", null, new { @class = "form-control" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row form-group">
+
+                                                <div class="col-sm-2" style="padding-left:17px">
+                                                    @Html.Label("Recommendations", new { @class = "required", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Training Needs", new { @class = "", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.RadioButton("Recommendtion", "1", new { onchange = "onSecRecommendChange(this.value)" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Promotion & Increment", new { @class = "", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.RadioButton("Recommendtion", "2", new { onchange = "onSecRecommendChange(this.value)" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.Label("Only Increment", new { @class = "", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    @Html.RadioButton("Recommendtion", "3", new { onchange = "onSecRecommendChange(this.value)" })
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <div class="col-sm-12 RecommendationsDiv" id="1" style="display:none">
+                                                        @Html.Label("Training Needs", new { @class = "required" })
+                                                        @Html.TextArea("TrainingNeeds", new
+                                                   {
+                                                       cols = "50",
+                                                       rows = "2"
+                                                   })
+                                                    </div>
+                                                    <div class="col-sm-12 RecommendationsDiv" id="2" style="display:none">
+                                                        <div class="col-sm-6">
+                                                            @Html.Label("Recommend Designation", new { @class = "required" })
+                                                            @Html.DropDownList("ddlDesignation", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            @Html.Label("Recommend Salary", new { @class = "required" })
+                                                            @Html.TextBox("RecSalary", null, new { @class = "form-control", onkeypress = "return validatenumerics(event);" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 RecommendationsDiv" id="3" style="display:none">
+                                                        <div class="col-sm-6">
+                                                            @Html.Label("Recommend Increment", new { @class = "required" })
+                                                            @Html.TextBox("RecIncrment", null, new { @class = "form-control", onkeypress = "return validatenumerics(event);" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <br />
+                                            <div class="row form-group">
+                                                <div class="col-sm-3" style="padding-left:17px">
+                                                    @Html.Label("Recommendation Manager View", new { @class = "required", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    @Html.TextBox("RecommendManView", null, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row form-group">
+                                                <div class="col-sm-1" style="padding-left:17px">
+                                                    @Html.Label("Comments", new { @class = "required", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    @Html.TextArea("Comments", new { cols = "50", rows = "2",disabled  = true})
+                                                </div>
+                                                <div class="col-sm-1" style="padding-left:17px">
+                                                    @Html.Label("Manager Comments", new { @class = "required", style = "font-weight: bold" })
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    @Html.TextArea("ManagerComm", new { cols = "50", rows = "2" })
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-sm-4" style="padding-left:17px">
+                                                    <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                                    <button type="button" class="btn btn-success" id="btnSave">Save </button>
+                                                    <button type="button" class="btn btn-success" id="btnSubmit">Submit</button>                                                   
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </fieldset>
+}
+<script src="~/Scripts/ReviewPanel/CommonMaster.js"></script>
+<script src="~/Scripts/ReviewPanel/SecondReview.js"></script>

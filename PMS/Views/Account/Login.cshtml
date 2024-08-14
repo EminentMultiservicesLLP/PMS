@@ -1,0 +1,346 @@
+﻿
+<!DOCTYPE html>
+@model PMS.Models.LoginModel
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>PMS-Login</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Content/login.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <style type="text/css">
+        /*author:leamug*/
+        /*reference site : leamug.com*/
+    
+
+        .container {
+            padding: 0px;
+        }
+
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #ffffff !important;
+            opacity: 1; /* Firefox */
+            font-size: 18px !important;
+        }
+
+        .form-login {
+            background-color: rgba(0,0,0,0.55);
+            padding-top: 10px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 15px;
+            border-color: #d2d2d2;
+            border-width: 5px;
+            color: white;
+            box-shadow: 0 1px 0 #cfcfcf;
+        }
+        /*
+        .form-control {
+            background: transparent !important;
+            color: white !important;
+            font-size: 14px !important;
+        }*/
+
+        h1 {
+            color: white !important;
+        }
+
+        h4 {
+            border: 0 solid #fff;
+            border-bottom-width: 1px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .text-white {
+            color: white !important;
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 18px;
+            height: 30px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .square_btn {
+            display: inline-block;
+            padding: 0.5em 1em;
+            text-decoration: none;
+            background: #E2E0B4;
+            border-left: solid 6px #ff7c5c;
+            color: #FF6D5C;
+            font-weight: bold;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+        }
+
+            .square_btn:active {
+                box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
+                transform: translateY(2px);
+            }
+    </style>
+</head>
+<body>
+
+    <div style="vertical-align:top; padding:5px;float:right;font-style:normal";>
+        <div align="right">
+            <a id="modal_trigger" href="#" class="square_btn" onclick="ToggleModelWindow();">Click Here to Login</a>
+        </div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken();
+        @Html.ValidationSummary(true);
+
+        <div style="margin-top:0">
+            <div id="loginmodal" class="container" style="display:none; max-width:450px;">
+                <div class="modal-dialog" role="document" style="width:auto;  ">
+                    <div class="modal-content" style="background-color: #5DBFCA;">
+                        <div class="modal-header" style="border-color:#FA8072;">
+                            <h4 class="modal-title" id="myModalLabel" style="border-bottom-width: 0px;">
+                                <br /> !!! Welcome !!!
+                                <br /> Please login 
+                            </h4>
+
+                            <button type="button" data-dismiss="modal" class="close" align="right" style="margin-top:-60px;font-weight:bold;" onclick="ToggleModelWindow();return false;">x</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12" style="border-right: 1px dotted #C2C2C2;padding: 10px;">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-pills" style="font-weight:bold;">
+                                        <li class="tablinks active" onclick="openAnotherTab(event, 'Login')"><a href="#Login">Login</a></li>
+                                       @* <li class="tablinks" onclick="openAnotherTab(event, 'ContactUs')"><a href="#ContactUs">Contact</a></li>*@
+
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content" style="border:1px solid white; border-radius:10px;padding:10px">
+                                        <div class="tab-pane active form-horizontal" id="Login">
+                                            @using (Ajax.BeginForm("Login", "Account", new AjaxOptions() { UpdateTargetId = "loginAlert" }, new { @class = "form-horizontal" }))
+                                            {
+                                                <h4>Secure Login</h4>
+                                                <div class="form-group">
+                                                    <label for="Username" class="col-sm-4 control-label" style="text-align:left;margin-left:10px; font-family:Arial">
+                                                        UserName
+                                                    </label>
+                                                    <div class="col-sm-7">
+                                                        @Html.TextBoxFor(m => m.Username, new { placeholder = "username or email", @class = "form-control input-sm chat-input"})
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email" class="col-sm-4 control-label" style="text-align:left; margin-left:10px;font-family:Arial;">
+                                                        Password
+                                                    </label>
+                                                    <div class="col-sm-7">
+                                                        @Html.PasswordFor(m => m.Password, new { placeholder = "password", @class = "form-control input-sm chat-input" })
+                                                    </div>
+                                                 </div>
+
+                                             <div class="row">
+                                                    <div id="loginAlert"></div>
+                                                    <div class="col-sm-3">
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="column col-sm-8 col-md-5"></div>
+                                                        <div style="margin-right:40px;font-family:Arial;">
+                                                            @Html.CheckBoxFor(m => m.RememberMe) Remember Me
+                                                        </div>
+                                                    </div>
+                                                        @*<div class="column col-sm-8 col-md-5" align="right">@Html.CheckBoxFor(m => m.RememberMe) Remember Me</div>*@
+                                                        <br />
+                                                      <div class="column controls col-sm-3 col-md-3" style="margin-right:50px;margin-left:10px;"  align="left">
+                                                            <input type="submit" value="Login" class="btn btn-primary btn-md">
+                                                      </div>
+                                            
+                                                    <div class="column controls col-sm-4 col-md-7" align="right">
+                                                        @*<input type="button" value="Forgot Password ?" onclick="ForgotPass();" class="btn btn-primary btn-md">*@
+                                                        @*@Html.HiddenFor(m => m.UserID)*@
+                                                    </div>
+                                                 </div>
+                                                <br />
+                                                <div id="ViewBageDiv" style="color :red">
+                                                    @ViewBag.LoginFailedMsg
+                                                </div>
+                                                @*<p style="color :red">
+                                                        @ViewBag.LoginFailedMsg
+                                                    </p>*@
+
+                                                
+                                            }
+
+
+                                        </div>
+                                        <div class="tab-pane" id="ContactUs">
+                                            <h4>Quick Contact</h4>
+                                            <div class="form-group row">
+                                                <label for="HospitalName" class="col-sm-5 control-label" style="text-align:left;">
+                                                    <b>Application Support</b>
+                                                </label>
+                                                <div class="col-sm-7">
+                                                    <i class="fa fa-mobile" aria-hidden="true"></i><b> +91 98927 05571 </b>
+                                                </div>
+                                            </div><br />
+                                            
+
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+    <!--footer-->
+    @*<div class="footer text-white text-center" style="margin-bottom:0">
+        <font color="black"> <p>© 2019 Login Form. All rights reserved | Design by <a href="http://eminentmultiservices.com" rel="dofollow"> </font> <font color="black">Eminent Multiservices</font></a></p>
+    </div>*@
+    <!--//footer-->
+
+</body>
+</html>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Styles.Render("~/Content/external")
+<script src="~/Scripts/common.js"></script>
+<script src="~/Scripts/MessageBox/messageboxes.min.js"></script>
+<script type="text/javascript">
+
+    if ("@ViewBag.LoginFailedMsg" != "")
+                {
+                    ToggleModelWindow();
+                }
+
+        function ToggleModelWindow() {
+
+                var x = document.getElementById("loginmodal");
+
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+            }
+
+
+
+            function openAnotherTab(evt, tabName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("tab-pane");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                // Get all elements with class="tablinks" and remove the class "active"
+                debugger;
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
+
+            }
+    $(".input").focusin(function () {
+        $(this).find("span").animate({ "opacity": "0" }, 200);
+            });
+
+    $(".input").focusout(function () {
+        $(this).find("span").animate({ "opacity": "1" }, 300);
+            });
+
+    function SendEnquiry() {
+        $("#Username").val('');
+        $("#Password").val('');
+                var passingJsonData = JSON.stringify({
+                    Name: $("#Name").val(),
+                    EmailFrom: $("#EmailFrom").val(),
+                    EmailSubject: $("#EmailSubject").val(),
+                    EmailBody: $("#EmailBody").val(),
+                    CompanyName: $("#CompanyName").val(),
+                    Phone: $("#Phone").val(),
+                });
+
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/Email/SendInquiryEmail',
+                    data: passingJsonData,
+                    success: function (msg) {
+                        ShowAlert("info", "Thank you for contacting us....");
+                        //ClearEnquiry();
+                        //ClearAllControl('bodyOfmail');
+                    },
+                    error: function (jxhr, status, msg) {
+                        alert("error");
+                    }
+                });
+            }
+            function ClearEnquiry() {
+        $("#ContactName").val('');
+        $("#Name").val('');
+        $("#email").val('');
+        $("#mobile").val('');
+        $("#message").val('');
+            }
+
+
+
+
+
+
+            function EnquiryFaied(response) {
+                alert("Error occured.");
+                return false;
+            }
+
+            function ForgotPass() {
+                var details = {
+                    LoginName: $("#Username").val(),
+                };
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    traditional: true,
+                    data: JSON.stringify(details),
+                    url: "/ForgotPassword/GetForgotPassword",
+                    success: function (msg) {
+                        if (msg.success) {
+                            ShowAlert("info", msg.message);
+                        }
+                        else {
+                            ShowAlert("warning", msg.message);
+                        }
+                    },
+                });
+            }
+</script>
+
+

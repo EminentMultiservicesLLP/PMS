@@ -1,0 +1,80 @@
+﻿@using System.Web.Mvc.Html
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+
+        <div class="container fill">
+            <div class="panel-group ">
+                <div class="panel">
+                    <div class="panel-groupingBoder">
+                        <div class="panel-heading panel-groupingBoder">
+                            <div class="panel-title">
+                                <a class="collapsediv" data-toggle="collapse" href="#ReviewReports" style="color: white">
+                                    Review Reports
+                                </a>
+                            </div>
+                        </div>
+                        <div id="ReviewReports" class="panel-collapse collapse in" aria-expanded="true">
+                            <div class="panel-body">
+                                <div class="col-sm-12 " id="" >
+                                    <div class="col-sm-2">
+                                        @Html.Label("Designation")
+                                        @Html.DropDownList("ddlDesignation", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.Label("Outlet")
+                                        @Html.DropDownList("ddlOutlet", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.Label("Grade")
+                                        @Html.DropDownList("ddlGrade", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.Label("Review Type")
+                                        @Html.DropDownList("ddlRvwType", new SelectList(new List<Object>{
+                                            new { value = 1 , text = "First Review"  },
+                                            new { value = 2 , text = "Second Review" },                  
+                                        }, "Value", "Text"), new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-sm-3" >
+                                        @Html.Label("Select Employee/Employee Code")
+                                        <input id="autocomplete_Employee" name="autocomplete_Employee" type="text" class="form-control" placeholder="Search by Employee" />
+                                        @Html.Hidden("EmpId")
+                                    </div>
+                                    </div>
+                                <div class="row">
+                                   <div class="col-sm-3">
+                                       <button type="button" class="btn btn-success" id="btnShow">Show Report</button>
+                                       <button type="button" class="btn btn-success" id="btnStatus">Status</button>
+                                       <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                       </div>
+                                   </div> 
+                               <br/>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-success" id="btnApprRpt" >Aprraisal Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                        </div>
+                            </div>
+                        </div>
+                    </div>                       
+                    </div>
+
+                    <div id="ReviewReportsModal" style="display:none;" title="Review Report">
+                        <div class="panel panel-primary" id="ReviewReport">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <iframe id="iframeReviewReportsViewer" style="width:100%;height:500px"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</fieldset>
+
+}
+<script src="~/Scripts/ReviewPanel/CommonMaster.js"></script>
+<script src="~/Scripts/ReviewPanel/ReviewReports.js"></script>

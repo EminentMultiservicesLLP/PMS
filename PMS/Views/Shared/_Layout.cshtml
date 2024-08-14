@@ -1,0 +1,352 @@
+﻿@using PMS.Models
+@using Microsoft.Ajax.Utilities
+@model List<MenuUserRightsModel>
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PMS</title>
+    @Styles.Render("~/Content/cssMust")
+    @Styles.Render("~/Content/css")
+    <style>
+        .wrapper {
+            display: flex;
+            width:100%;
+            align-items: stretch;
+        }
+        #sidebar {
+            padding-left: 20px;
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            color: #fff;
+            background: #337AB7;
+            transition: all 0.3s;
+        }
+
+            #sidebar.active {
+                margin-left: -250px;
+            }
+
+        a, a:hover, a:focus {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #337AB7;
+        }
+
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+        }
+
+            #sidebar ul li a:hover {
+                color: #337AB7;
+                background: #fff;
+            }
+
+        #sidebar ul li.active > a, a[aria-expanded="true"] {
+            color: #fff;
+            background: #337AB7;
+        }
+
+        ul ul a {
+            
+            padding-left: 0px !important;
+            font-size: 1.0em;
+            background: #337AB7;
+        }
+
+        a[data-toggle="collapse"] {
+            position: relative;
+        }
+
+        .dropdown-toggle::after {
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        .style_Revision_btn {
+            margin-left: 10px;
+            font-size:15px;
+            font-weight:bold;
+            font-style:inherit;
+            display: inline-block;
+            border-style: initial;
+            position: relative;
+        }
+
+            .style_Revision_btn:hover {
+                -webkit-transition: all 200ms ease-in;
+                -webkit-transform: scale(1.5);
+                -ms-transform: scale(1.5);
+            }
+    </style>
+    @functions{
+
+        public HtmlString GenerateSubMenus(string parentMenuPageName, int menuId, string menus)
+        {
+            
+                if (Model != null &&  Model.Any(w => w.ParentMenuId == menuId))
+                {
+                    menus = string.Concat(menus, "<ul class=collapse Style ='list-style-type:none; ' ", " id =" + '"' + parentMenuPageName + menuId + '"' + " > ");
+                    foreach (var subMenu in Model.Where(w => w.ParentMenuId == menuId))
+                    {
+                        menus = menus + "<li>";
+
+
+                        var childMenu = string.Concat("/", parentMenuPageName, "/", parentMenuPageName, "/", subMenu.PageName);
+
+                        if (Model.Any(w => w.ParentMenuId == subMenu.MenuId))
+                            menus = string.Concat(menus, "<a data-toggle = 'collapse' aria - expanded = 'false'  class='dropdown-toggle' style='padding-left:0px;' href=", "#" + subMenu.PageName.Trim() + subMenu.MenuId, "> <div><i class='fa fa-caret-right'></i> &nbsp;", subMenu.MenuName, "</div></a>");
+                        else
+                            menus = string.Concat(menus, "<a data-ajax='true' data-ajax-begin='showPageLoadingSpinner' style='padding-left:0px;' data-ajax-complete='hidePageLoadingSpinner' data-ajax-loading='#ajaxLoaderDiv' data-ajax-mode='replace' onclick=sidebarCollapse(); data-ajax-update='#ShowView' href=", childMenu, "><div><i class='fa fa-minus'></i> &nbsp;", subMenu.MenuName, "</div></a>");
+
+
+                        if (Model.Any(w => w.ParentMenuId == subMenu.MenuId)) menus = GenerateSubMenus(subMenu.PageName, subMenu.MenuId, menus).ToString();
+
+                        menus = menus + "</li>";
+                    }
+                    menus = menus + "</ul>";
+                }
+            return new HtmlString(menus);
+        }
+
+    }
+</head>
+<body>
+    <div id="topSection" class="row" style="display:none">
+        <div style="padding-left:30px" class="col-sm-1">
+            <button type="button" id="sidebarCollapse" class="btn btn-info" onclick=MenusidebarCollapse();>
+                <span class="glyphicon glyphicon-align-justify"></span>
+                <span>Menu</span>
+            </button>
+        </div>
+    </div>
+    <div id="ajaxLoaderDiv" style="position: fixed; top: 40%; left: 45%; z-index: 1234; display: none;" class="blur">
+        <img src="@Url.Content("~/Images/loading.gif")" alt="Loading, please wait..." class="ajax-loader" />
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true);
+        <div id="bodySection" class="">
+            <div class="wrapper">
+
+                <!-- Sidebar -->
+                <nav id="sidebar">
+                    <div class="sidebar-header  " style="padding-bottom:5px ;  border-bottom:2px solid black ">
+                        <div >
+                            <div class="col-lg-8">
+                                <a href="@Url.Action("Index", "Home")">
+                                    <div>
+                                        <img src="@Url.Content("~/Images/impresario-logo.jpg")" style="width: 50px" />
+                                        <br />
+
+                                        @Html.Encode(User.Identity.Name) <span class="label label-success" style="font-size:0.9em"  title="Balance Amt/Remaining Bills">@Session["BalanceAmount"]</span>
+                                    </div>
+                                </a>
+                            </div>
+                            @*<div class="col-lg-4">
+                                <font size="20" style="font-style:bold" onclick="ShowMenu(true);">X</font>
+                            </div>*@
+                            <div class="col-lg-12" style="display:block">
+                                @Html.ActionLink("Sign Out", "LogOff", "Account", new { area = "" }, new { @class = "glyphicon glyphicon-log-out" })
+                               
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-lg-12" style="display:block">
+
+   
+  
+                </div>
+          </div>
+     </div>
+                    <ul class="list-unstyled components">
+                        @if (Model != null ){
+                        foreach (var mainMenu in Model.Where(w => w.ParentMenuId == 0))
+                        {
+                            var mainMenulink = "#";
+                            var IsComAreaElement = 0;
+                            if (Model.Any(w => w.ParentMenuId == @mainMenu.MenuId) == false)
+                            {
+                                /*mainMenulink = "/Home/Home/" + @mainMenu.PageName;*/
+                                IsComAreaElement = 1;
+                                mainMenulink = "/CommonArea/CommonArea/" + @mainMenu.PageName;
+                            }
+                            <li>
+                                @{ if (IsComAreaElement == 1)
+                                    {
+                                        <a data-ajax='true' data-ajax-mode='replace' data-ajax-begin="showPageLoadingSpinner" data-ajax-complete="hidePageLoadingSpinner" data-ajax-update='#ShowView' data-ajax-loading="#ajaxLoaderDiv" onclick=sidebarCollapse() href=@mainMenulink>
+
+                                            <div>
+                                                <i class="fa @mainMenu.Icon"></i>
+                                                @mainMenu.MenuName.Trim()
+
+                                            </div>
+                                        </a>
+                                        IsComAreaElement = 0;
+                                    }
+                                    else
+                                    {
+                                        <a href="#@mainMenu.PageName.Trim()@mainMenu.MenuId" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+
+                                            <div>
+                                                <i class="fa @mainMenu.Icon"></i>
+                                                @mainMenu.MenuName.Trim()
+
+                                            </div>
+                                        </a>
+                                        @GenerateSubMenus(@mainMenu.PageName, @mainMenu.MenuId, "")
+                                    }
+                                }
+
+
+                            </li>
+                                    }
+                        }
+                    </ul>
+
+                </nav>
+
+
+                <section class="col-lg-12">
+                    <div class="partialViewSection" style="position:relative ">
+
+                        @*<button type="button" id="sidebarCollapse" class="btn btn-info" onclick=sidebarCollapse();>
+                                <span class="glyphicon glyphicon-align-justify"></span>
+                                <span>Menu</span>
+                            </button>*@
+
+                        <div id="clbtn" ><img src="~/Images/cross-button.png" alt="Close" /></div>
+                        <div id="ShowView" style="padding-bottom: 0px;">
+                            @RenderBody()
+                        </div>
+                    </div>                  
+                </section>
+
+                <footer style="position:center;width: 100%;background-color:transparent; position:fixed; bottom:0; text-align: center;">
+                   <strong> <p style="color:black;font-size:20px">Developed By Eminent Multiservices LLP</p></strong>
+                </footer>
+            </div>
+        </div>
+        
+                                    }
+                                    else
+                                    {
+        @Html.ActionLink("Sign In", "Login", "Account")
+    }
+
+    
+</body>
+
+
+
+</html>
+
+<script src="~/Scripts/jLinq-2.2.1.js"></script>
+@Styles.Render("~/Content/external")
+@Styles.Render("~/Content/themes/base/css")
+@Scripts.Render("~/bundles/jquery")
+
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jqueryMore")
+@Scripts.Render("~/bundles/jquery/external")
+@Scripts.Render("~/bundles/jqueryval")
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        var touch = $('#resp-menu');
+        var menu = $('.menu');     
+        //$('#sidebarCollapse').on('click', function () {
+        //    $('#sidebar').toggleClass('active');
+        //});
+
+        $(touch).on('click', function (e) {
+            e.preventDefault();
+            menu.slideToggle();
+        });
+
+        $(window).resize(function () {
+            var w = $(window).width();
+            if (w > 767 && menu.is(':hidden')) {
+                menu.removeAttr('style');
+            }
+        });
+
+        $("#clbtn").click(function () {
+            $(".partialViewSection").hide();
+            $("#ShowView").empty();
+            fillDiv(false);
+            $('#sidebar').toggleClass('active');
+        });
+        
+    });
+
+    function fillDiv(show) {
+        
+        var topSection = $("#topSection");
+        var topHeight = topSection.height();
+
+        
+        var div = $(".partialViewSection");
+    
+
+        var availableHeight = window.innerHeight;
+        var scaleY = availableHeight - (topHeight + 25);
+
+    
+
+        if (show === false) {
+            scaleY = 0;
+        }
+        div.css({
+            "position": "relative",
+            "height": scaleY + "px"
+        });
+    }
+
+    function showPageLoadingSpinner() {
+        $('#ajaxLoaderDiv').show();
+    }
+
+    function MenusidebarCollapse() {
+        $('#sidebar').toggleClass('active');
+        $("#topSection").hide();
+    }
+
+    function sidebarCollapse() {
+        $(".partialViewSection").show();
+        $('#sidebar').toggleClass('active');
+    }
+
+    function hidePageLoadingSpinner() {
+        fillDiv();
+        setTimeout(function () {
+            $('#ajaxLoaderDiv').hide();
+        }, 20000);
+
+    }
+    function ShowMenu(show)
+    {
+        $("#topSection").show();
+        $('#sidebar').toggleClass('active');
+    }
+
+
+
+
+</script>

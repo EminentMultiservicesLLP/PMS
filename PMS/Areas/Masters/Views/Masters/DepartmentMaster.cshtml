@@ -1,0 +1,67 @@
+﻿@model PMS.Areas.Masters.Models.DepartmentModel
+@using System.Web.Mvc.Html
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-groupingBoder">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <a class="collapsediv" data-toggle="collapse" href="#SearchDetails" style="color: white">
+                                Department Master
+                            </a>
+                        </div>
+                    </div>
+                    <div id="SearchDetails" class="panel-collapse collapse in" aria-expanded="true">
+
+                        <div class="panel-body panel-groupingBoder">
+                            <div class="container fill">
+                                <div class="row">
+                                    <div id="DeptMastersearchgrid" class="col-sm-6"></div>                                    
+                                        <div class="col-sm-6 ">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <button type="button" class="btn btn-success" id="btnAdd">Add New Entry</button>
+                                                    <button type="button" class="btn btn-success" id="btnSave">Save</button>
+                                                    <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    @Html.LabelFor(m => m.DeptName, new { @class = "required" })
+                                                    @Html.TextBoxFor(m => m.DeptName, new { @class = "form-control " })
+                                                    @Html.HiddenFor(m => m.DeptId)
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <br />
+                                                    @Html.LabelFor(model => model.Deactive)
+                                                    @Html.CheckBoxFor(model => model.Deactive)
+                                                </div>
+                                            </div>
+                                    </div>
+                                   
+                                    </div>
+
+
+
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+   
+}
+
+<script src="~/Scripts/MasterPageScript/DepartmentMaster.js"></script>

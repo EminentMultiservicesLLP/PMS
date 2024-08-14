@@ -3,3 +3,9 @@
 ################################################################################
 
 /CommonDataLayer/bin
+/CommonDataLayer/obj
+/CommonLayer/bin
+/CommonLayer/obj
+/PMS/bin
+/PMS/obj
+/WebEssentials2015-Settings.json

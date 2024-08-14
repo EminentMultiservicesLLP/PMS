@@ -1,0 +1,324 @@
+﻿@using PMS.Models
+@using Microsoft.Ajax.Utilities
+@model List<MenuUserRightsModel>
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PMS</title>
+    @Styles.Render("~/Content/cssMust")
+    @Styles.Render("~/Content/css")
+	<link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css" />
+    <style>
+        .wrapper {
+            width:100%;
+            align-items: stretch;
+        }
+		
+		/************* New Menu *************/
+			.floating-menu{border-radius:80px;z-index:999;padding-top:10px;padding-bottom:10px;left:0;position:fixed;display:inline-block;top:50%;
+			-webkit-transform:translateY(-50%);
+			-ms-transform:translateY(-50%);transform:translateY(-50%)}.main-menu{margin:0;padding-left:0;list-style:none}
+			.main-menu li a{display:block;padding:10px;color:#fff;border-radius:50px;position:relative;
+			-webkit-transition:none;-o-transition:none;transition:none}.main-menu li a:hover{background:rgba(244,244,244,.3)}
+			.menu-bg{background-image:-webkit-linear-gradient(top,#1C5E91 0,#167699 100%);background-image:-o-linear-gradient(top,#1C5E91 0,#167699 100%);
+			background-image:-webkit-gradient(linear,left top,left bottom,from(#1C5E91),to(#167699));background-image:linear-gradient(to bottom,#1C5E91 0,#167699 100%);
+			background-repeat:repeat-x;position:absolute;width:100%;height:100%;border-radius:50px;z-index:-1;top:0;left:0;-webkit-transition:.1s;-o-transition:.1s;transition:.1s}
+			.ripple{position:relative;overflow:hidden;transform:translate3d(0,0,0)}.ripple:after{content:"";display:block;position:absolute;width:100%;height:100%;top:0;left:0;
+			pointer-events:none;background-image:radial-gradient(circle,#000 10%,transparent 10.01%);background-repeat:no-repeat;background-position:50%;
+			transform:scale(10,10);opacity:0;
+			transition:transform .5s,opacity 1s}.ripple:active:after{transform:scale(0,0);opacity:.2;transition:0s}
+		
+        #sidebar {
+            padding-left: 20px;
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            color: #fff;
+            background: #337AB7;
+            transition: all 0.3s;
+        }
+
+            #sidebar.active {
+                margin-left: -250px;
+            }
+
+        a, a:hover, a:focus {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #337AB7;
+        }
+
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+        }
+
+            #sidebar ul li a:hover {
+                color: #337AB7;
+                background: #fff;
+            }
+
+        #sidebar ul li.active > a, a[aria-expanded="true"] {
+            color: #fff;
+            background: #337AB7;
+        }
+
+        ul ul a {
+            
+            padding-left: 0px !important;
+            font-size: 1.0em;
+            background: #337AB7;
+        }
+
+        a[data-toggle="collapse"] {
+            position: relative;
+        }
+
+        .dropdown-toggle::after {
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        .style_Revision_btn {
+            margin-left: 10px;
+            font-size:15px;
+            font-weight:bold;
+            font-style:inherit;
+            display: inline-block;
+            border-style: initial;
+            position: relative;
+        }
+
+            .style_Revision_btn:hover {
+                -webkit-transition: all 200ms ease-in;
+                -webkit-transform: scale(1.5);
+                -ms-transform: scale(1.5);
+            }
+    </style>
+    @functions{
+
+        public HtmlString GenerateSubMenus(string parentMenuPageName, int menuId, string menus)
+        {
+            
+                if (Model != null &&  Model.Any(w => w.ParentMenuId == menuId))
+                {
+                    menus = string.Concat(menus, "<ul class=collapse Style ='list-style-type:none; ' ", " id =" + '"' + parentMenuPageName + menuId + '"' + " > ");
+                    foreach (var subMenu in Model.Where(w => w.ParentMenuId == menuId))
+                    {
+                        menus = menus + "<li>";
+
+
+                        var childMenu = string.Concat("/", parentMenuPageName, "/", parentMenuPageName, "/", subMenu.PageName);
+
+                        if (Model.Any(w => w.ParentMenuId == subMenu.MenuId))
+                            menus = string.Concat(menus, "<a data-toggle = 'collapse' aria - expanded = 'false'  class='dropdown-toggle' style='padding-left:0px;' href=", "#" + subMenu.PageName.Trim() + subMenu.MenuId, "> <div><i class='fa fa-caret-right'></i> &nbsp;", subMenu.MenuName, "</div></a>");
+                        else
+                            menus = string.Concat(menus, "<a data-ajax='true' data-ajax-begin='showPageLoadingSpinner' style='padding-left:0px;' data-ajax-complete='hidePageLoadingSpinner' data-ajax-loading='#ajaxLoaderDiv' data-ajax-mode='replace' onclick=sidebarCollapse(); data-ajax-update='#ShowView' href=", childMenu, "><div><i class='fa fa-minus'></i> &nbsp;", subMenu.MenuName, "</div></a>");
+
+
+                        if (Model.Any(w => w.ParentMenuId == subMenu.MenuId)) menus = GenerateSubMenus(subMenu.PageName, subMenu.MenuId, menus).ToString();
+
+                        menus = menus + "</li>";
+                    }
+                    menus = menus + "</ul>";
+                }
+            return new HtmlString(menus);
+        }
+
+    }
+</head>
+<body>
+    <div id="topSection" class="row" style="display:none">
+        <div style="padding-left:30px" class="col-sm-1">
+            <button type="button" id="sidebarCollapse" class="btn btn-info" onclick=MenusidebarCollapse();>
+                <span class="glyphicon glyphicon-align-justify"></span>
+                <span>Menu</span>
+            </button>
+        </div>
+    </div>
+    <div id="ajaxLoaderDiv" style="position: fixed; top: 40%; left: 45%; z-index: 1234; display: none;" class="blur">
+        <img src="@Url.Content("~/Images/loading.gif")" alt="Loading, please wait..." class="ajax-loader" />
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true);
+        <div id="bodySection" class="">
+            <div class="wrapper">
+
+                <!-- Sidebar -->
+                <nav class="floating-menu">
+					<ul class="main-menu">
+						<li>
+							<a data-ajax='true' data-ajax-begin='showPageLoadingSpinner' data-ajax-complete='hidePageLoadingSpinner' data-ajax-loading='#ajaxLoaderDiv' 
+							data-ajax-mode='replace' data-ajax-update='#ShowView' href="" class="ripple" title="Home">
+								<i class="fa fa-home fa-2x"></i>
+							</a>
+						</li>
+						<li>
+							<a data-ajax='true' data-ajax-begin='showPageLoadingSpinner' data-ajax-complete='hidePageLoadingSpinner' 
+								data-ajax-loading='#ajaxLoaderDiv' data-ajax-mode='replace' data-ajax-update='#ShowView' href="/Review/Review/FirstReview" class="ripple" title="First Review">
+							   <i class="fa fa-quora fa-2x"></i>
+							</a>
+						</li>
+						<li>
+							<a data-ajax='true' data-ajax-begin='showPageLoadingSpinner' data-ajax-complete='hidePageLoadingSpinner' 
+								data-ajax-loading='#ajaxLoaderDiv' data-ajax-mode='replace' data-ajax-update='#ShowView' href="/Reports/Reports" class="ripple" title="Report">
+								<i class="fa fa-book fa-2x"></i>
+							</a>
+						</li>
+						<li>
+							<a href="/Account/LogOff" class="ripple"  title="Logout">
+								<i class="fa fa-sign-out fa-2x"></i>
+							</a>
+						</li>
+						<!-- <li> -->
+							<!-- <a href="#" class="ripple"> -->
+								<!-- <i class="fa fa-blogger-b fa-lg"></i> -->
+							<!-- </a> -->
+						<!-- </li> -->
+					</ul>
+					<div class="menu-bg"></div>
+				</nav>
+
+                <section class="content-wrapper col-lg-12">
+                    <div class="partialViewSection" style="position:relative ">
+
+                        @*<button type="button" id="sidebarCollapse" class="btn btn-info" onclick=sidebarCollapse();>
+                                <span class="glyphicon glyphicon-align-justify"></span>
+                                <span>Menu</span>
+                            </button>*@
+
+                        <div id="clbtn" ><img src="~/Images/cross-button.png" alt="Close" /></div>
+                        <div id="ShowView" style="padding-bottom: 0px;padding-left:20px;">
+                            @RenderBody()
+                        </div>
+                    </div>                  
+                </section>
+
+                <footer style="position:center;width: 100%;background-color:transparent; position:fixed; bottom:0; text-align: center;">
+                   <strong> <p style="color:black;font-size:20px">Developed By Eminent Multiservices LLP</p></strong>
+                </footer>
+            </div>
+        </div>
+        
+                                    }
+                                    else
+                                    {
+        @Html.ActionLink("Sign In", "Login", "Account")
+    }
+
+    
+</body>
+
+
+
+</html>
+
+<script src="~/Scripts/jLinq-2.2.1.js"></script>
+@Styles.Render("~/Content/external")
+@Styles.Render("~/Content/themes/base/css")
+@Scripts.Render("~/bundles/jquery")
+
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jqueryMore")
+@Scripts.Render("~/bundles/jquery/external")
+@Scripts.Render("~/bundles/jqueryval")
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        var touch = $('#resp-menu');
+        var menu = $('.menu');     
+        //$('#sidebarCollapse').on('click', function () {
+        //    $('#sidebar').toggleClass('active');
+        //});
+
+        $(touch).on('click', function (e) {
+            e.preventDefault();
+            menu.slideToggle();
+        });
+
+        $(window).resize(function () {
+            var w = $(window).width();
+            if (w > 767 && menu.is(':hidden')) {
+                menu.removeAttr('style');
+            }
+        });
+
+        $("#clbtn").click(function () {
+            $(".partialViewSection").hide();
+            $("#ShowView").empty();
+            fillDiv(false);
+            $('#sidebar').toggleClass('active');
+        });
+        
+    });
+
+    function fillDiv(show) {
+        
+        var topSection = $("#topSection");
+        var topHeight = topSection.height();
+
+        
+        var div = $(".partialViewSection");
+    
+
+        var availableHeight = window.innerHeight;
+        var scaleY = availableHeight - (topHeight + 25);
+
+    
+
+        if (show === false) {
+            scaleY = 0;
+        }
+        div.css({
+            "position": "relative",
+            "height": scaleY + "px"
+        });
+    }
+
+    function showPageLoadingSpinner() {
+        $('#ajaxLoaderDiv').show();
+    }
+
+    function MenusidebarCollapse() {
+        $('#sidebar').toggleClass('active');
+        $("#topSection").hide();
+    }
+
+    function sidebarCollapse() {
+        $(".partialViewSection").show();
+        $('#sidebar').toggleClass('active');
+    }
+
+    function hidePageLoadingSpinner() {
+        fillDiv();
+        setTimeout(function () {
+            $('#ajaxLoaderDiv').hide();
+        }, 20000);
+
+    }
+    function ShowMenu(show)
+    {
+        $("#topSection").show();
+        $('#sidebar').toggleClass('active');
+    }
+
+
+
+
+</script>

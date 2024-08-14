@@ -1,0 +1,175 @@
+﻿
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @Styles.Render("~/Content/cssMust")
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/external")
+
+</head>
+
+@{
+    Layout = null;
+}
+
+<script src= "~/Scripts/MessageBox/lobibox.min.js"></script>
+<script src="~/Scripts/common.js"></script>
+<script src="~/Scripts/MessageBox/messageboxes.min.js"></script>
+@model PMS.Models.LoginPageModel
+
+
+@using System.Web.Mvc.Html
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend></legend>
+        <br/>
+        <div class="container fill">
+            @*<div class="panel-group">
+            <div class="panel panel-default">*@
+            <div class="panel-groupingBoder">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a class="collapsediv" data-toggle="collapse" href="#collapse2" style="color:white">
+                            Welcome!Change Your Password Here.
+                        </a>
+                    </div>
+                </div>
+                <br />
+
+                <br />
+                <div class="panel-body">
+                    <br />
+                    @*<div class="form-group form-horizontal">*@
+                    <div class="row">
+                        <div class="col-sm-1">
+                            @*@Html.Label("Username:", new { @class = "required " })*@
+                            <span style="font-weight:bold">Username</span>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control " })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-1">
+                            @*@Html.Label("Password:", new { @class = "required " })*@
+                            <span style="font-weight:bold"> Old Password</span>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(m => m.OldPassword, new { @class = "form-control ", placeholder = "Enter Your Old Password" })
+                        </div>
+                    </div>
+
+
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-1">
+                            @*@Html.Label("New Password:", new { @class = "required " })*@
+                            <span style="font-weight:bold">New Password</span>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.TextBoxFor(m => m.NewPassword, new { @class = "form-control ", placeholder = "Enter New Password" })
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group form-horizontal">
+                                <br />
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-success" id="btnSave">Save</button>
+                                    <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                    <br />
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.HiddenFor(m => m.UserID)
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+     
+</fieldset>
+    <script type="text/javascript">
+        $("#Username").prop('disabled', true);
+        var oldpassword = $("#Username").val();
+        
+    $("#btnReset").click(function() {
+        ClearForm();
+    });
+
+    function ClearForm() {
+    $("#OldPassword").val(""),
+     $("#NewPassword").val("")
+                }
+    debugger;
+    $("#btnSave").click(function() {
+        if ($("#Username").val() != oldpassword) {
+            ShowAlert('warning', ' Please Enter Valid UserName .')
+            return;
+        }
+        if ($("#OldPassword").val() != oldpassword) {
+            ShowAlert('warning', ' Please Enter Valid OldPassword .')
+            return;
+        }
+        if ($("#OldPassword").val() == $("#NewPassword").val()) {
+            ShowAlert('warning', ' OldPassword And NewPassword Must Be Different ! ')
+            
+            return;
+        }
+        
+        var details = JSON.stringify({
+            Username: $("#Username").val(),
+            NewPassword: $("#NewPassword").val(),
+            UserID: $("#UserID").val(), 
+        });
+            $.ajax(
+            {
+                type: "POST", //HTTP POST Method
+                traditional: true,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                url: '/LoginPage/SaveDetails', // Controller/action
+                data: details,
+                success: function (msg) {
+                    if (msg.success) {
+                        //ShowAlert("success", msg.message);
+                        @*window.location.href = '@Url.Action("Login", "Account")/'*@
+                            Lobibox.alert('info', {
+                                msg: msg.message + "<br /> Click <b><u>OK</u></b> To Relogin  ",
+                                buttons: {
+                                    OK: {
+                                        'class': 'btn btn-success btnBigFont12',
+                                        text: 'Ok',
+                                        closeOnClick: true
+                                    },                                
+                                },
+                                callback: function (lobibox, type) {
+                                    if (type === 'OK') {
+                                        window.location.href = '/Account/Login';
+                                    }
+                                }
+                            });
+                    }
+                    else {
+                        ShowAlert("warning", msg.message);
+                    }
+                },
+                error: function (jqXhr, exception) {
+
+                    ShowAlert("warning", "Something went wrong! please Contact to Administrator");
+                }
+            });
+     
+        }
+        )
+    </script>
+}
+
+
+

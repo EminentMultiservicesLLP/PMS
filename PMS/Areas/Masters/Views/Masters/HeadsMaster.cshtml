@@ -1,0 +1,62 @@
+﻿@model PMS.Areas.Masters.Models.HeadsModel
+@using System.Web.Mvc.Html
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-groupingBoder">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <a class="collapsediv" data-toggle="collapse" href="#SearchDetails" style="color: white">
+                                Head Master
+                            </a>
+                        </div>
+                    </div>
+                    <div id="SearchDetails" class="panel-collapse collapse in" aria-expanded="true">
+
+                        <div class="panel-body panel-groupingBoder">
+                            <div class="container fill">
+                                <div class="row">
+                                    <div id="HeadMastersearchgrid" class="col-sm-6"></div>
+                                    <div class="col-sm-6 ">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <button type="button" class="btn btn-success" id="btnAdd">Add New Entry</button>
+                                                <button type="button" class="btn btn-success" id="btnSave">Save</button>
+                                                <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                @Html.Label("Select Questionnaire", new { @class = "required" })
+                                                @Html.DropDownList("ddlQuestionnaire", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @Html.LabelFor(m => m.HeadName, new { @class = "required" })
+                                                @Html.TextBoxFor(m => m.HeadName, new { @class = "form-control " })
+                                                @Html.HiddenFor(m => m.HeadId)
+                                                @Html.HiddenFor(m => m.QuestionnaireId)
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <br />
+                                                @Html.LabelFor(model => model.Deactive)
+                                                @Html.CheckBoxFor(model => model.Deactive)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+}
+
+<script src="~/Scripts/MasterPageScript/HeadMaster.js"></script>

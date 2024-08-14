@@ -1,0 +1,141 @@
+﻿@model PMS.Areas.Masters.Models.EmployeeModel
+@using System.Web.Mvc.Html
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-groupingBoder">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <a class="collapsediv" data-toggle="collapse" href="#SearchDetails" style="color: white">
+                                Employee Master
+                            </a>
+                        </div>
+                    </div>
+                    <div id="SearchDetails" class="panel-collapse collapse in" aria-expanded="true">
+
+                        <div class="panel-body panel-groupingBoder">
+                            <div class="container fill">
+                                <div class="row">
+                                    <div id="EmpMastersearchgrid" ></div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-groupingBoder">
+                        <div class="col-sm-12 ">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-success" id="btnAdd">Add New Entry</button>
+                                    <button type="button" class="btn btn-success" id="btnSave">Save</button>
+                                    <button type="button" class="btn btn-success" id="btnReset">Reset</button>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    @Html.Label("Select Department Name", new { @class = "required" })
+                                    @Html.DropDownList("ddlDepartment", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                </div>
+                                <div class="col-sm-2">
+
+                                    @Html.Label("Select Designation Name", new { @class = "required" })
+                                    @Html.DropDownList("ddlDsg", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                </div>
+                                <div class="col-sm-2">
+
+                                    @Html.Label("Select Outlet Name", new { @class = "required" })
+                                    @Html.DropDownList("ddlOutlet", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.Label("Select Role", new { @class = "required" })
+                                    @Html.DropDownList("ddlRole", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(m => m.FirstName, new { @class = "required" })
+                                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control " })
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(m => m.LastName, new { @class = "required" })
+                                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control " })
+                                </div>
+                            </div>
+                            <div class="row">
+                                
+                                    <div class="col-sm-2">
+                                       @Html.LabelFor(m => m.Salary, new { @class = "required" })
+                                       @Html.TextBoxFor(m => m.Salary, new { @class = "form-control " })
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.Label("Select Apraiser One Employee")
+                                       <input id="autocomplete_Employee" name="autocomplete_Employee" type="text" class="form-control" placeholder="Search by Employee" />
+                                       @Html.HiddenFor(m => m.AppraiserEmpId)
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.Label("Select Apraiser Second Employee")
+                                        <input id="autocomplete_Employee2" name="autocomplete_Employee2" type="text" class="form-control" placeholder="Search by Employee" />
+                                        @Html.HiddenFor(m => m.AppraiserTwoEmpId)
+                                    </div>
+                                    <div class="col-sm-2">
+                                        @Html.LabelFor(m => m.EmpCode, new { @class = "required" })
+                                        @Html.TextBoxFor(m => m.EmpCode, new { @class = "form-control " })
+                                        @Html.HiddenFor(m => m.EmpId)
+                                    </div>
+                                <div class="col-sm-2">
+                                    @Html.Label("Select Questionnaire", new { @class = "required" })
+                                    @Html.DropDownList("ddlQuestionnaire", new SelectList(string.Empty, "Value", "Text"), "Select", new { @class = "form-control" })
+                                </div>
+                                 
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(m => m.JoiningDate, new { @class = "required " })
+                                    <div class='input-group date' id='JoiningDate'>
+
+                                        <input id='JoiningDate1' type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.LabelFor(m => m.ConfirmationDate, new { @class = "required " })
+                                    <div class='input-group date' id='ConfirmationDate'>
+
+                                        <input id='ConfirmationDate1' type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.Label("Last Promotion Date", new { @class = "required" })
+                                    <div class='input-group date' id='LastPromoDate'>
+
+                                        <input type='text' id="LastPromoDate1" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <br />
+                                    @Html.LabelFor(model => model.Deactive)
+                                    @Html.CheckBoxFor(model => model.Deactive)
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+
+}
+<script src="~/Scripts/MasterPageScript/EmployeeMaster.js"></script>
